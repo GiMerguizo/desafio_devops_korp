@@ -1,13 +1,13 @@
 # Build
-FROM golang:1.21-alpine AS golang
+FROM golang:1.21-alpine AS builder
 
 WORKDIR /app
 
 # Copiar os arquivos Go
-COPY http-server-projeto-korp.go .
+COPY main.go .
 
 # Compilar a aplicação
-RUN go build -o http-server-projeto-korp http-server-projeto-korp.go
+RUN go build -o server main.go
 
 # Executar
 FROM alpine:latest
@@ -15,10 +15,10 @@ FROM alpine:latest
 WORKDIR /root/
 
 # Copiar o binário compilado do stage anterior
-COPY --from=golang /app/http-server-projeto-korp .
+COPY --from=builder /app/server .
 
 # Expor a porta 8080
 EXPOSE 8080
 
 # Comando para executar a aplicação
-CMD ["./http-server-projeto-korp"]
+CMD ["./server"]

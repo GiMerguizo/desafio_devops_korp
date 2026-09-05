@@ -1,0 +1,27 @@
+services:
+  http-server-projeto-korp:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    expose:
+      - "8080"
+    networks:
+      - default
+
+  nginx:
+  # Imagem oficial
+    image: nginx:alpine
+    volumes:
+    - ./nginx:/etc/nginx/conf.d
+    ports:
+    - "80:80"
+    restart: unless-stopped
+    networks:
+      - default
+    depends_on:
+      - http-server-projeto-korp
+  
+# rede Docker no modo bridge
+networks:
+  default:
+    driver: bridge

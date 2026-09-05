@@ -19,15 +19,16 @@ func main() {
 }
 
 func RouteProjeto(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodGet {
+	// Garante que apenas o endpoint GET /projeto-korp seja aceito
+	if r.URL.Path != "/projeto-korp" || r.Method != http.MethodGet {
 		http.Error(w, "Método não permitido", http.StatusMethodNotAllowed)
 		return
 	}
 
-	// Define o nome e o horario com o formato resolvido
+	// Define o nome e o horario com o formato UTC
 	response := ProjetoKorpResponse{
 		Nome:    "Projeto Korp",
-		Horario: time.Now().Format("02-01-2006 15:04:05"),
+		Horario: time.Now().UTC().Format(time.RFC3339),
 	}
 
 	w.Header().Set("Content-Type", "application/json")
